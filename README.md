@@ -4,20 +4,23 @@ A modern API backend built with **Bun** runtime and **Hono** framework, migrated
 
 ## Tech Stack
 
-- **Runtime**: [Bun](https://bun.sh)
-- **Framework**: [Hono](https://hono.dev)
-- **Database**: PostgreSQL with [Drizzle ORM](https://orm.drizzle.team)
+- **Runtime**: [Bun](https://bun.sh) v1.3+
+- **Framework**: [Hono](https://hono.dev) v4.10
+- **Database**: PostgreSQL with [Drizzle ORM](https://orm.drizzle.team) v0.44
 - **Authentication**: [Better Auth](https://better-auth.com) + JWT + OTP
-- **Validation**: Zod
+- **Validation**: [Zod](https://zod.dev) v4
 - **Payments**: Stripe
 - **Email**: Resend
 - **Storage**: Cloudflare R2
+- **Linting**: [Biome](https://biomejs.dev)
+- **Monitoring**: [Sentry](https://sentry.io)
+- **API Docs**: Swagger UI (OpenAPI)
 
 ## Getting Started
 
 ### Prerequisites
 
-- [Bun](https://bun.sh) v1.0+
+- [Bun](https://bun.sh) v1.3+
 - PostgreSQL database (Railway recommended)
 
 ### Installation
@@ -38,14 +41,18 @@ Required environment variables:
 
 - `DATABASE_URL` - PostgreSQL connection string
 - `BETTER_AUTH_SECRET` - Secret for Better Auth (min 32 chars)
-- `JWT_SECRET` - Secret for JWT signing
+- `BETTER_AUTH_URL` - URL for Better Auth (e.g., <http://localhost:3000>)
+- `JWT_SECRET` - Secret for JWT signing (min 16 chars)
 - `FRONTEND_URL` - Your frontend URL
 
 Optional (for full functionality):
 
 - `RESEND_API_KEY` - For email sending
+- `RESEND_FROM_EMAIL` - From email (supports "Name <email>" format)
 - `STRIPE_SECRET_KEY` - For payments
-- `R2_*` - For file storage
+- `STRIPE_WEBHOOK_SECRET` - For Stripe webhooks
+- `R2_*` - For Cloudflare R2 file storage
+- `SENTRY_DSN` - For error monitoring
 
 ### Database Setup
 
@@ -67,6 +74,26 @@ Or push schema directly (development):
 bun run db:push
 ```
 
+Seed the database with test data:
+
+```bash
+bun run db:seed
+```
+
+Open Drizzle Studio to view/edit data:
+
+```bash
+bun run db:studio
+```
+
+### Test Accounts (after seeding)
+
+| Email | Password | Role |
+|-------|----------|------|
+| <admin@example.com> | password123 | Admin |
+| <demo@example.com> | password123 | Member |
+| <member@example.com> | password123 | Member |
+
 ### Development
 
 ```bash
@@ -74,6 +101,8 @@ bun run dev
 ```
 
 The server will start at `http://localhost:3000`.
+
+API documentation available at `http://localhost:3000/docs`.
 
 ### Production
 
@@ -174,12 +203,67 @@ All routes are prefixed with `/api/v1`:
 ## Scripts
 
 ```bash
-bun run dev         # Development with watch mode
-bun run start       # Production start
-bun run db:generate # Generate Drizzle migrations
-bun run db:migrate  # Run migrations
-bun run db:push     # Push schema to database
-bun run db:studio   # Open Drizzle Studio
+bun run dev           # Development with watch mode
+bun run start         # Production start
+bun run lint          # Lint with Biome
+bun run lint:fix      # Lint and fix
+bun run format        # Format with Biome
+bun run format:fix    # Format and fix
+bun run check         # Check lint + format
+bun run check:fix     # Check and fix all
+bun run db:generate   # Generate Drizzle migrations
+bun run db:migrate    # Run migrations
+bun run db:push       # Push schema to database
+bun run db:studio     # Open Drizzle Studio
+bun run db:seed       # Seed database with test data
+```
+
+## Deployment
+
+### Railway
+
+A `railway.json` configuration is included for Railway deployment using RAILPACK.
+
+```bash
+railway up
+```
+
+### Render
+
+A `render.yaml` blueprint is included for Render deployment.
+
+## Project Structure
+
+```
+src/
+├── db/
+│   ├── index.ts          # Database connection
+│   ├── seed.ts           # Database seeding
+│   └── schema/           # Drizzle schema definitions
+├── lib/
+│   ├── auth.ts           # Better Auth setup
+│   ├── env.ts            # Environment validation (Zod)
+│   ├── jwt.ts            # JWT utilities
+│   ├── r2.ts             # Cloudflare R2 client
+│   ├── resend.ts         # Email client
+│   ├── sentry.ts         # Sentry initialization
+│   └── stripe.ts         # Stripe client
+├── middleware/
+│   ├── auth.ts           # Authentication middleware
+│   ├── cors.ts           # CORS configuration
+│   ├── logger.ts         # Request logging
+│   ├── rate-limit.ts     # Rate limiting
+│   └── sentry.ts         # Sentry middleware
+├── routes/
+│   ├── auth/             # Authentication routes
+│   ├── health/           # Health check routes
+│   ├── organizations/    # Organization routes
+│   ├── projects/         # Project routes
+│   ├── subscriptions/    # Subscription routes
+│   ├── uploads/          # File upload routes
+│   ├── users/            # User routes
+│   └── webhooks/         # Webhook handlers
+└── index.ts              # Application entry point
 ```
 
 ## License
