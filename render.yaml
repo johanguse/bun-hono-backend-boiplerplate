@@ -1,0 +1,81 @@
+# Render Blueprint - Backend API
+# Bun + Hono API deployment
+version: "1"
+
+projects:
+  - name: backend-api
+
+    environments:
+      # ==========================================
+      # PRODUCTION ENVIRONMENT
+      # ==========================================
+      - name: Production
+        services:
+          # Hono Backend - Production
+          - type: web
+            name: prod-api-backend
+            runtime: node
+            repo: https://github.com/your-org/your-repo
+            branch: main
+            rootDir: backend_bun_hono
+            plan: starter
+            region: ohio
+            buildCommand: bun install && bun run db:generate
+            startCommand: export PATH="$HOME/.bun/bin:$PATH" && bun run db:migrate && bun run start
+            healthCheckPath: /health
+            envVars:
+              - key: NODE_ENV
+                value: production
+              - key: PORT
+                value: 10000
+              - key: DATABASE_URL
+                sync: false
+              - key: BETTER_AUTH_SECRET
+                generateValue: true
+              - key: BETTER_AUTH_URL
+                sync: false
+              - key: JWT_SECRET
+                generateValue: true
+              - key: JWT_LIFETIME_SECONDS
+                value: 3600
+              - key: FRONTEND_URL
+                sync: false
+              - key: RESEND_API_KEY
+                sync: false
+              - key: RESEND_FROM_EMAIL
+                sync: false
+              - key: STRIPE_SECRET_KEY
+                sync: false
+              - key: STRIPE_WEBHOOK_SECRET
+                sync: false
+              - key: STRIPE_PUBLIC_KEY
+                sync: false
+              - key: R2_ENDPOINT_URL
+                sync: false
+              - key: R2_ACCESS_KEY_ID
+                sync: false
+              - key: R2_SECRET_ACCESS_KEY
+                sync: false
+              - key: R2_BUCKET_NAME
+                sync: false
+              - key: R2_PUBLIC_URL
+                sync: false
+              - key: GOOGLE_CLIENT_ID
+                sync: false
+              - key: GOOGLE_CLIENT_SECRET
+                sync: false
+              - key: GITHUB_CLIENT_ID
+                sync: false
+              - key: GITHUB_CLIENT_SECRET
+                sync: false
+              - key: SENTRY_DSN
+                sync: false
+            autoDeployTrigger: commit
+
+        # Production Database (optional - use if you want Render-managed Postgres)
+        # databases:
+        #   - name: prod-api-postgres
+        #     databaseName: prod_api_db
+        #     user: prod_user
+        #     plan: starter
+        #     region: ohio
