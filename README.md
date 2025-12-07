@@ -205,6 +205,9 @@ All routes are prefixed with `/api/v1`:
 ```bash
 bun run dev           # Development with watch mode
 bun run start         # Production start
+bun run test          # Run tests in watch mode
+bun run test:run      # Run tests once
+bun run test:coverage # Run tests with coverage report
 bun run lint          # Lint with Biome
 bun run lint:fix      # Lint and fix
 bun run format        # Format with Biome
@@ -216,6 +219,54 @@ bun run db:migrate    # Run migrations
 bun run db:push       # Push schema to database
 bun run db:studio     # Open Drizzle Studio
 bun run db:seed       # Seed database with test data
+```
+
+## Testing
+
+The project uses [Vitest](https://vitest.dev) for testing with colocated test files.
+
+### Test Structure
+
+Tests are colocated with source files in `__tests__` folders:
+
+```
+src/
+├── __tests__/
+│   ├── setup.ts                    # Test setup and environment mocks
+│   └── app.test.ts                 # App integration tests
+├── lib/__tests__/
+│   ├── jwt.test.ts                 # JWT utility tests
+│   └── zod.test.ts                 # Zod validation tests
+└── routes/
+    ├── auth/__tests__/
+    │   └── schemas.test.ts         # Auth schema tests
+    ├── health/__tests__/
+    │   └── health.test.ts          # Health endpoint tests
+    ├── organizations/__tests__/
+    │   └── organizations.test.ts   # Organization tests
+    ├── projects/__tests__/
+    │   └── projects.test.ts        # Project tests
+    ├── subscriptions/__tests__/
+    │   └── subscriptions.test.ts   # Subscription tests
+    ├── uploads/__tests__/
+    │   └── uploads.test.ts         # Upload tests
+    ├── users/__tests__/
+    │   └── users.test.ts           # User tests
+    └── webhooks/__tests__/
+        └── webhooks.test.ts        # Webhook tests
+```
+
+### Running Tests
+
+```bash
+# Watch mode (re-runs on changes)
+bun run test
+
+# Single run
+bun run test:run
+
+# With coverage report
+bun run test:coverage
 ```
 
 ## Deployment
