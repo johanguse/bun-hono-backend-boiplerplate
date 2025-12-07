@@ -286,8 +286,8 @@ describe("Webhook Routes", () => {
 
       const json = (await res.json()) as { data: Array<{ status: number }>; total: number };
       expect(json.data).toHaveLength(2);
-      expect(json.data[0].status).toBe(200);
-      expect(json.data[1].status).toBe(500);
+      expect(json.data[0]?.status).toBe(200);
+      expect(json.data[1]?.status).toBe(500);
     });
   });
 });

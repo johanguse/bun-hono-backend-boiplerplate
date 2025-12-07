@@ -137,7 +137,7 @@ describe("Subscription Routes", () => {
 
       const json = (await res.json()) as { data: Array<{ id: number; name: string }> };
       expect(json.data).toHaveLength(3);
-      expect(json.data[0].name).toBe("free");
+      expect(json.data[0]?.name).toBe("free");
     });
   });
 

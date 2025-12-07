@@ -26,7 +26,7 @@ const envSchema = z.object({
       z
         .string()
         .regex(/^(.+\s)?<?[\w.-]+@[\w.-]+\.\w+>?$/, "Invalid email format")
-        .optional()
+        .optional(),
     ),
 
   // Stripe
