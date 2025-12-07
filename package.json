@@ -15,6 +15,7 @@
     "format:fix": "biome format --write ./src",
     "check": "biome check ./src",
     "check:fix": "biome check --write ./src",
+    "typecheck": "tsc --noEmit",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push",
