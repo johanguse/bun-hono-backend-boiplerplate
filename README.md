@@ -214,12 +214,61 @@ bun run format        # Format with Biome
 bun run format:fix    # Format and fix
 bun run check         # Check lint + format
 bun run check:fix     # Check and fix all
+bun run typecheck     # TypeScript type checking
 bun run db:generate   # Generate Drizzle migrations
 bun run db:migrate    # Run migrations
 bun run db:push       # Push schema to database
 bun run db:studio     # Open Drizzle Studio
 bun run db:seed       # Seed database with test data
 ```
+
+## CI/CD
+
+GitHub Actions workflows are included for continuous integration and deployment.
+
+### CI Workflow (`.github/workflows/ci.yml`)
+
+Runs on every push and pull request to `main`, `master`, or `develop`:
+
+- **Lint** - Biome linting and format checking
+- **Type Check** - TypeScript type validation
+- **Test** - Run tests with coverage
+- **Build** - Verify build succeeds
+
+### Deploy Workflow (`.github/workflows/deploy.yml`)
+
+Runs on push to `main` or `master`. Supports Railway and Render deployments.
+
+The workflow uses a `DEPLOY_TARGET` variable to determine which platform to deploy to.
+
+#### Setting Up GitHub Variables and Secrets
+
+1. Go to your GitHub repository
+2. Click **Settings** → **Secrets and variables** → **Actions**
+3. Add **Variables** (click "Variables" tab):
+   - `DEPLOY_TARGET` - Set to `railway` or `render`
+   - `RAILWAY_SERVICE_ID` - Your Railway service ID (only if using Railway)
+4. Add **Secrets** (click "Secrets" tab):
+   - `RAILWAY_TOKEN` - Your Railway project token (only if using Railway)
+   - `RENDER_DEPLOY_HOOK_URL` - Your Render deploy hook URL (only if using Render)
+
+#### Railway Deployment
+
+1. In Railway Dashboard, go to your project → **Settings** → **Tokens**
+2. Create a new **Project Token** and copy it
+3. Get your **Service ID** from the service URL: `https://railway.com/project/.../service/[SERVICE_ID]`
+4. In GitHub repo settings:
+   - Add variable: `DEPLOY_TARGET` = `railway`
+   - Add variable: `RAILWAY_SERVICE_ID` = your service ID
+   - Add secret: `RAILWAY_TOKEN` = your project token
+
+#### Render Deployment
+
+1. In Render Dashboard, go to your service → **Settings** → **Deploy Hook**
+2. Copy the deploy hook URL
+3. In GitHub repo settings:
+   - Add variable: `DEPLOY_TARGET` = `render`
+   - Add secret: `RENDER_DEPLOY_HOOK_URL` = your deploy hook URL
 
 ## Testing
 

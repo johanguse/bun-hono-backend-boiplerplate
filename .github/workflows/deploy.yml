@@ -1,0 +1,35 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+
+jobs:
+  deploy-railway:
+    name: Deploy to Railway
+    runs-on: ubuntu-latest
+    if: vars.DEPLOY_TARGET == 'railway'
+    container: ghcr.io/railwayapp/cli:latest
+    env:
+      RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Deploy to Railway
+        run: railway up --service=${{ vars.RAILWAY_SERVICE_ID }}
+
+  deploy-render:
+    name: Deploy to Render
+    runs-on: ubuntu-latest
+    if: vars.DEPLOY_TARGET == 'render'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Deploy to Render
+        env:
+          RENDER_DEPLOY_HOOK_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+        run: |
+          curl "$RENDER_DEPLOY_HOOK_URL"
