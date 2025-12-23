@@ -1,6 +1,8 @@
 # Backend - Bun + Hono
 
-A modern API backend built with **Bun** runtime and **Hono** framework, migrated from FastAPI. Features authentication, organization/project management, subscriptions, and file uploads.
+A modern API backend built with **Bun** runtime and **Hono** framework. Features authentication, organization/project management, subscriptions, and file uploads.
+
+> **Note**: This backend works with the companion [Frontend](../frontend) project. The frontend supports switching between this backend and the [FastAPI backend](../backend) via environment variables.
 
 ## Tech Stack
 
@@ -14,7 +16,8 @@ A modern API backend built with **Bun** runtime and **Hono** framework, migrated
 - **Storage**: Cloudflare R2
 - **Linting**: [Biome](https://biomejs.dev)
 - **Monitoring**: [Sentry](https://sentry.io)
-- **API Docs**: Swagger UI (OpenAPI)
+- **API Docs**: Swagger UI (OpenAPI 3.1)
+- **SDK Generation**: [Hey API](https://heyapi.dev) compatible
 
 ## Getting Started
 
@@ -103,6 +106,26 @@ bun run dev
 The server will start at `http://localhost:3000`.
 
 API documentation available at `http://localhost:3000/docs`.
+
+### API Documentation & SDK Generation
+
+The API exposes OpenAPI 3.1 specification for documentation and client SDK generation:
+
+- **OpenAPI JSON**: `http://localhost:3000/openapi.json`
+- **Swagger UI**: `http://localhost:3000/docs`
+
+#### Generating TypeScript SDK with Hey API
+
+In your frontend project, you can generate a type-safe TypeScript SDK from this backend's OpenAPI spec:
+
+```bash
+# In your frontend project
+bun run gen:api  # Assumes hey-api is configured
+```
+
+All endpoints include clean `operationId` values that generate intuitive SDK methods like `authJwtLogin()`, `usersGetMe()`, `organizationsList()`, etc.
+
+See [docs/HEY_API.md](docs/HEY_API.md) for detailed setup instructions.
 
 ### Production
 

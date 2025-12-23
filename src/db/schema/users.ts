@@ -27,6 +27,14 @@ export const users = pgTable("users", {
   bio: varchar("bio", { length: 500 }),
   website: varchar("website", { length: 200 }),
 
+  // Billing fields
+  taxId: varchar("tax_id", { length: 100 }),
+  addressStreet: varchar("address_street", { length: 255 }),
+  addressCity: varchar("address_city", { length: 100 }),
+  addressState: varchar("address_state", { length: 100 }),
+  addressPostalCode: varchar("address_postal_code", { length: 20 }),
+  companyName: varchar("company_name", { length: 255 }),
+
   // Onboarding tracking
   onboardingCompleted: boolean("onboarding_completed").default(false).notNull(),
   onboardingStep: integer("onboarding_step").default(0).notNull(),
