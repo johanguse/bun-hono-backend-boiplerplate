@@ -159,3 +159,56 @@ export async function listInvoices(customerId: string, limit = 10): Promise<Stri
 
   return invoices.data;
 }
+
+/**
+ * Update Stripe customer with billing information
+ * Used for Brazilian NFSE tax compliance and invoice generation
+ */
+export async function updateCustomerBillingInfo(params: {
+  customerId: string;
+  name?: string;
+  email?: string;
+  taxId?: string;
+  address?: {
+    line1?: string;
+    city?: string;
+    state?: string;
+    postal_code?: string;
+    country?: string;
+  };
+  metadata?: Record<string, string>;
+}): Promise<Stripe.Customer | null> {
+  if (!stripe) {
+    console.warn("[DEV] Stripe not configured");
+    return null;
+  }
+
+  const updateData: Stripe.CustomerUpdateParams = {};
+
+  if (params.name) {
+    updateData.name = params.name;
+  }
+
+  if (params.email) {
+    updateData.email = params.email;
+  }
+
+  if (params.address) {
+    updateData.address = {
+      line1: params.address.line1 || "",
+      city: params.address.city || "",
+      state: params.address.state || "",
+      postal_code: params.address.postal_code || "",
+      country: params.address.country || "",
+    };
+  }
+
+  // Store tax ID and billing info in metadata for NFSE/invoice generation
+  updateData.metadata = {
+    ...params.metadata,
+    tax_id: params.taxId || "",
+    updated_at: new Date().toISOString(),
+  };
+
+  return stripe.customers.update(params.customerId, updateData);
+}

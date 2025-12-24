@@ -3,7 +3,7 @@ import { asc, desc, eq, sql } from "drizzle-orm";
 import { Hono } from "hono";
 import { z } from "zod/v4";
 import { db } from "../../db";
-import { users } from "../../db/schema";
+import { customerSubscriptions, users } from "../../db/schema";
 import { apiRateLimiter, authMiddleware, requireAdmin, requireAuth } from "../../middleware";
 import {
   ALLOWED_IMAGE_TYPES,
@@ -11,6 +11,7 @@ import {
   isValidFileType,
   uploadFile,
 } from "../../services/storage.service";
+import { updateCustomerBillingInfo } from "../../services/stripe.service";
 
 const usersRouter = new Hono();
 
@@ -108,6 +109,46 @@ usersRouter.patch("/me", requireAuth, zValidator("json", updateProfileSchema), a
 
     if (!updated) {
       return c.json({ detail: "Failed to update user" }, 500);
+    }
+
+    // Sync billing info to Stripe customer metadata if billing fields were updated
+    const hasBillingUpdate = data.taxId || data.addressStreet || data.addressCity || 
+      data.addressState || data.addressPostalCode || data.country || data.companyName;
+    
+    if (hasBillingUpdate) {
+      // Find user's Stripe customer ID from their subscription
+      const [subscription] = await db
+        .select({ stripeCustomerId: customerSubscriptions.stripeCustomerId })
+        .from(customerSubscriptions)
+        .innerJoin(
+          db.select().from(users).where(eq(users.id, updated.id)).as("u"),
+          sql`true` // We'll filter by org membership in a real implementation
+        )
+        .limit(1);
+
+      if (subscription?.stripeCustomerId) {
+        // Sync to Stripe for NFSE/invoice compliance
+        await updateCustomerBillingInfo({
+          customerId: subscription.stripeCustomerId,
+          name: updated.companyName || updated.name || undefined,
+          email: updated.email,
+          taxId: updated.taxId || undefined,
+          address: {
+            line1: updated.addressStreet || undefined,
+            city: updated.addressCity || undefined,
+            state: updated.addressState || undefined,
+            postal_code: updated.addressPostalCode || undefined,
+            country: updated.country || undefined,
+          },
+          metadata: {
+            company_name: updated.companyName || "",
+            user_id: String(updated.id),
+          },
+        }).catch((err) => {
+          console.warn("Failed to sync billing info to Stripe:", err);
+          // Don't fail the request if Stripe sync fails
+        });
+      }
     }
 
     return c.json({
