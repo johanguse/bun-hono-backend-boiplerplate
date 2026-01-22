@@ -32,6 +32,7 @@ export const openApiSpec = {
   paths: {
     "/health": {
       get: {
+        operationId: "healthCheck",
         tags: ["Health"],
         summary: "Health check",
         description: "Returns the health status of the API",
@@ -56,6 +57,7 @@ export const openApiSpec = {
     },
     "/auth/jwt/login": {
       post: {
+        operationId: "authJwtLogin",
         tags: ["Auth"],
         summary: "Login with email and password",
         description: "Authenticate user and receive JWT tokens",
@@ -96,6 +98,7 @@ export const openApiSpec = {
     },
     "/auth/register": {
       post: {
+        operationId: "authRegister",
         tags: ["Auth"],
         summary: "Register a new user",
         description: "Create a new user account",
@@ -137,6 +140,7 @@ export const openApiSpec = {
     },
     "/auth/otp/send": {
       post: {
+        operationId: "authOtpSend",
         tags: ["Auth"],
         summary: "Send OTP code",
         description: "Send a one-time password to user's email",
@@ -166,6 +170,7 @@ export const openApiSpec = {
     },
     "/auth/otp/verify": {
       post: {
+        operationId: "authOtpVerify",
         tags: ["Auth"],
         summary: "Verify OTP code",
         description: "Verify OTP and receive JWT tokens",
@@ -201,6 +206,7 @@ export const openApiSpec = {
     },
     "/auth/forgot-password": {
       post: {
+        operationId: "authForgotPassword",
         tags: ["Auth"],
         summary: "Request password reset",
         description: "Send password reset email",
@@ -227,6 +233,7 @@ export const openApiSpec = {
     },
     "/auth/reset-password": {
       post: {
+        operationId: "authResetPassword",
         tags: ["Auth"],
         summary: "Reset password",
         description: "Reset password using token",
@@ -257,6 +264,7 @@ export const openApiSpec = {
     },
     "/users/me": {
       get: {
+        operationId: "usersGetMe",
         tags: ["Users"],
         summary: "Get current user",
         description: "Get the authenticated user's profile",
@@ -276,6 +284,7 @@ export const openApiSpec = {
         },
       },
       patch: {
+        operationId: "usersUpdateMe",
         tags: ["Users"],
         summary: "Update current user",
         description: "Update the authenticated user's profile",
@@ -292,6 +301,12 @@ export const openApiSpec = {
                   language: { type: "string" },
                   timezone: { type: "string" },
                   theme: { type: "string", enum: ["light", "dark", "system"] },
+                  taxId: { type: "string" },
+                  addressStreet: { type: "string" },
+                  addressCity: { type: "string" },
+                  addressState: { type: "string" },
+                  addressPostalCode: { type: "string" },
+                  companyName: { type: "string" },
                 },
               },
             },
@@ -311,6 +326,7 @@ export const openApiSpec = {
     },
     "/organizations": {
       get: {
+        operationId: "organizationsList",
         tags: ["Organizations"],
         summary: "List organizations",
         description: "Get all organizations for the current user",
@@ -331,6 +347,7 @@ export const openApiSpec = {
         },
       },
       post: {
+        operationId: "organizationsCreate",
         tags: ["Organizations"],
         summary: "Create organization",
         description: "Create a new organization",
@@ -365,6 +382,7 @@ export const openApiSpec = {
     },
     "/organizations/{id}": {
       get: {
+        operationId: "organizationsGetById",
         tags: ["Organizations"],
         summary: "Get organization",
         description: "Get organization by ID",
@@ -385,6 +403,7 @@ export const openApiSpec = {
         },
       },
       patch: {
+        operationId: "organizationsUpdateById",
         tags: ["Organizations"],
         summary: "Update organization",
         description: "Update organization details",
@@ -411,6 +430,7 @@ export const openApiSpec = {
         },
       },
       delete: {
+        operationId: "organizationsDeleteById",
         tags: ["Organizations"],
         summary: "Delete organization",
         description: "Delete an organization",
@@ -425,6 +445,7 @@ export const openApiSpec = {
     },
     "/projects": {
       get: {
+        operationId: "projectsList",
         tags: ["Projects"],
         summary: "List projects",
         description: "Get all projects for the current user",
@@ -446,6 +467,7 @@ export const openApiSpec = {
         },
       },
       post: {
+        operationId: "projectsCreate",
         tags: ["Projects"],
         summary: "Create project",
         description: "Create a new project",
@@ -480,6 +502,7 @@ export const openApiSpec = {
     },
     "/subscriptions": {
       get: {
+        operationId: "subscriptionsGet",
         tags: ["Subscriptions"],
         summary: "Get subscription",
         description: "Get the current user's subscription",
@@ -498,6 +521,7 @@ export const openApiSpec = {
     },
     "/subscriptions/plans": {
       get: {
+        operationId: "subscriptionsPlansList",
         tags: ["Subscriptions"],
         summary: "List plans",
         description: "Get all available subscription plans",
@@ -510,6 +534,7 @@ export const openApiSpec = {
     },
     "/uploads/presigned-url": {
       post: {
+        operationId: "uploadsGetPresignedUrl",
         tags: ["Uploads"],
         summary: "Get presigned upload URL",
         description: "Get a presigned URL for uploading a file",
@@ -555,6 +580,7 @@ export const openApiSpec = {
     },
     "/uploads/file": {
       post: {
+        operationId: "uploadsFile",
         tags: ["Uploads"],
         summary: "Upload file",
         description: "Upload a file directly",
@@ -617,6 +643,12 @@ export const openApiSpec = {
           language: { type: "string" },
           timezone: { type: "string" },
           theme: { type: "string" },
+          tax_id: { type: "string" },
+          address_street: { type: "string" },
+          address_city: { type: "string" },
+          address_state: { type: "string" },
+          address_postal_code: { type: "string" },
+          company_name: { type: "string" },
           created_at: { type: "string", format: "date-time" },
         },
       },

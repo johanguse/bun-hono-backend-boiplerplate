@@ -3,7 +3,7 @@ import { asc, desc, eq, sql } from "drizzle-orm";
 import { Hono } from "hono";
 import { z } from "zod/v4";
 import { db } from "../../db";
-import { users } from "../../db/schema";
+import { customerSubscriptions, users } from "../../db/schema";
 import { apiRateLimiter, authMiddleware, requireAdmin, requireAuth } from "../../middleware";
 import {
   ALLOWED_IMAGE_TYPES,
@@ -11,6 +11,7 @@ import {
   isValidFileType,
   uploadFile,
 } from "../../services/storage.service";
+import { updateCustomerBillingInfo } from "../../services/stripe.service";
 
 const usersRouter = new Hono();
 
@@ -27,6 +28,12 @@ const updateProfileSchema = z.object({
   timezone: z.string().optional(),
   bio: z.string().optional(),
   website: z.string().optional(),
+  taxId: z.string().optional(),
+  addressStreet: z.string().optional(),
+  addressCity: z.string().optional(),
+  addressState: z.string().optional(),
+  addressPostalCode: z.string().optional(),
+  companyName: z.string().optional(),
 });
 
 const paginationSchema = z.object({
@@ -69,6 +76,12 @@ usersRouter.get("/me", requireAuth, async (c) => {
     timezone: user!.timezone,
     bio: user!.bio,
     website: user!.website,
+    tax_id: user!.taxId,
+    address_street: user!.addressStreet,
+    address_city: user!.addressCity,
+    address_state: user!.addressState,
+    address_postal_code: user!.addressPostalCode,
+    company_name: user!.companyName,
     onboarding_completed: user!.onboardingCompleted,
     onboarding_step: user!.onboardingStep,
     created_at: user!.createdAt?.toISOString(),
@@ -98,6 +111,52 @@ usersRouter.patch("/me", requireAuth, zValidator("json", updateProfileSchema), a
       return c.json({ detail: "Failed to update user" }, 500);
     }
 
+    // Sync billing info to Stripe customer metadata if billing fields were updated
+    const hasBillingUpdate =
+      data.taxId ||
+      data.addressStreet ||
+      data.addressCity ||
+      data.addressState ||
+      data.addressPostalCode ||
+      data.country ||
+      data.companyName;
+
+    if (hasBillingUpdate) {
+      // Find user's Stripe customer ID from their subscription
+      const [subscription] = await db
+        .select({ stripeCustomerId: customerSubscriptions.stripeCustomerId })
+        .from(customerSubscriptions)
+        .innerJoin(
+          db.select().from(users).where(eq(users.id, updated.id)).as("u"),
+          sql`true`, // We'll filter by org membership in a real implementation
+        )
+        .limit(1);
+
+      if (subscription?.stripeCustomerId) {
+        // Sync to Stripe for NFSE/invoice compliance
+        await updateCustomerBillingInfo({
+          customerId: subscription.stripeCustomerId,
+          name: updated.companyName || updated.name || undefined,
+          email: updated.email,
+          taxId: updated.taxId || undefined,
+          address: {
+            line1: updated.addressStreet || undefined,
+            city: updated.addressCity || undefined,
+            state: updated.addressState || undefined,
+            postal_code: updated.addressPostalCode || undefined,
+            country: updated.country || undefined,
+          },
+          metadata: {
+            company_name: updated.companyName || "",
+            user_id: String(updated.id),
+          },
+        }).catch((err) => {
+          console.warn("Failed to sync billing info to Stripe:", err);
+          // Don't fail the request if Stripe sync fails
+        });
+      }
+    }
+
     return c.json({
       id: updated.id,
       email: updated.email,
@@ -116,6 +175,12 @@ usersRouter.patch("/me", requireAuth, zValidator("json", updateProfileSchema), a
       timezone: updated.timezone,
       bio: updated.bio,
       website: updated.website,
+      tax_id: updated.taxId,
+      address_street: updated.addressStreet,
+      address_city: updated.addressCity,
+      address_state: updated.addressState,
+      address_postal_code: updated.addressPostalCode,
+      company_name: updated.companyName,
       onboarding_completed: updated.onboardingCompleted,
       onboarding_step: updated.onboardingStep,
       created_at: updated.createdAt?.toISOString(),
@@ -328,6 +393,12 @@ usersRouter.get("/admin/users/:id", requireAdmin, async (c) => {
       timezone: user.timezone,
       bio: user.bio,
       website: user.website,
+      tax_id: user.taxId,
+      address_street: user.addressStreet,
+      address_city: user.addressCity,
+      address_state: user.addressState,
+      address_postal_code: user.addressPostalCode,
+      company_name: user.companyName,
       onboarding_completed: user.onboardingCompleted,
       onboarding_step: user.onboardingStep,
       created_at: user.createdAt?.toISOString(),

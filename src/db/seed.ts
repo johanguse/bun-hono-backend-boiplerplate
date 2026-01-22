@@ -133,6 +133,13 @@ async function seed() {
         timezone: "America/New_York",
         company: "Acme Corp",
         jobTitle: "System Administrator",
+        // Billing fields
+        taxId: "US-123456789",
+        addressStreet: "123 Tech Blvd",
+        addressCity: "New York",
+        addressState: "NY",
+        addressPostalCode: "10001",
+        companyName: "Acme Corp",
       },
       {
         email: "demo@example.com",
@@ -148,6 +155,13 @@ async function seed() {
         timezone: "America/Los_Angeles",
         company: "Demo Inc",
         jobTitle: "Developer",
+        // Billing fields
+        taxId: "US-987654321",
+        addressStreet: "456 Developer Ln",
+        addressCity: "San Francisco",
+        addressState: "CA",
+        addressPostalCode: "94105",
+        companyName: "Demo Inc",
       },
       {
         email: "member@example.com",
