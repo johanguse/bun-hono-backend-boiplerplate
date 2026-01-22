@@ -1,5 +1,5 @@
-import { describe, it, expect } from "vitest";
 import * as jose from "jose";
+import { describe, expect, it } from "vitest";
 
 describe("JWT Utilities", () => {
   const secret = new TextEncoder().encode("test-jwt-secret-key-min-32-chars");

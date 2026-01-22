@@ -112,8 +112,14 @@ usersRouter.patch("/me", requireAuth, zValidator("json", updateProfileSchema), a
     }
 
     // Sync billing info to Stripe customer metadata if billing fields were updated
-    const hasBillingUpdate = data.taxId || data.addressStreet || data.addressCity ||
-      data.addressState || data.addressPostalCode || data.country || data.companyName;
+    const hasBillingUpdate =
+      data.taxId ||
+      data.addressStreet ||
+      data.addressCity ||
+      data.addressState ||
+      data.addressPostalCode ||
+      data.country ||
+      data.companyName;
 
     if (hasBillingUpdate) {
       // Find user's Stripe customer ID from their subscription
@@ -122,7 +128,7 @@ usersRouter.patch("/me", requireAuth, zValidator("json", updateProfileSchema), a
         .from(customerSubscriptions)
         .innerJoin(
           db.select().from(users).where(eq(users.id, updated.id)).as("u"),
-          sql`true` // We'll filter by org membership in a real implementation
+          sql`true`, // We'll filter by org membership in a real implementation
         )
         .limit(1);
 

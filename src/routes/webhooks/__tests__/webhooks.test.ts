@@ -1,5 +1,5 @@
-import { describe, it, expect, beforeEach } from "vitest";
 import { Hono } from "hono";
+import { beforeEach, describe, expect, it } from "vitest";
 import { z } from "zod/v4";
 
 // Webhook schemas

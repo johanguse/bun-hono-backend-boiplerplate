@@ -1,13 +1,13 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 import {
+  forgotPasswordSchema,
   loginSchema,
-  registerSchema,
-  userCreateSchema,
-  userUpdateSchema,
   otpSendSchema,
   otpVerifySchema,
-  forgotPasswordSchema,
+  registerSchema,
   resetPasswordSchema,
+  userCreateSchema,
+  userUpdateSchema,
 } from "../schemas";
 
 describe("Auth Schemas", () => {
