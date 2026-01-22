@@ -9,8 +9,8 @@ const webhooksRouter = new Hono();
 
 const stripe = env.STRIPE_SECRET_KEY
   ? new Stripe(env.STRIPE_SECRET_KEY, {
-    apiVersion: "2025-12-15.clover",
-  })
+      apiVersion: "2025-12-15.clover",
+    })
   : null;
 
 /**
