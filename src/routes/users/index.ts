@@ -112,9 +112,9 @@ usersRouter.patch("/me", requireAuth, zValidator("json", updateProfileSchema), a
     }
 
     // Sync billing info to Stripe customer metadata if billing fields were updated
-    const hasBillingUpdate = data.taxId || data.addressStreet || data.addressCity || 
+    const hasBillingUpdate = data.taxId || data.addressStreet || data.addressCity ||
       data.addressState || data.addressPostalCode || data.country || data.companyName;
-    
+
     if (hasBillingUpdate) {
       // Find user's Stripe customer ID from their subscription
       const [subscription] = await db
