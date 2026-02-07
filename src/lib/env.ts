@@ -52,6 +52,9 @@ const envSchema = z.object({
     .string()
     .transform((val) => (val === "" ? undefined : val))
     .pipe(z.url().optional()),
+
+  // Fiscal Nacional
+  FISCAL_WEBHOOK_SECRET: z.string().optional(),
 });
 
 export type Env = z.infer<typeof envSchema>;

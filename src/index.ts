@@ -12,6 +12,7 @@ import { corsMiddleware, loggerMiddleware } from "./middleware";
 import authRouter from "./routes/auth";
 import onboardingRouter from "./routes/auth/onboarding";
 import otpRouter from "./routes/auth/otp";
+import fiscalRouter from "./routes/fiscal";
 import healthRouter from "./routes/health";
 import organizationsRouter from "./routes/organizations";
 import projectsRouter from "./routes/projects";
@@ -80,6 +81,7 @@ apiV1.route("/organizations", organizationsRouter);
 apiV1.route("/projects", projectsRouter);
 apiV1.route("/subscriptions", subscriptionsRouter);
 apiV1.route("/uploads", uploadsRouter);
+apiV1.route("/fiscal", fiscalRouter);
 
 // Mount API v1
 app.route("/api/v1", apiV1);
