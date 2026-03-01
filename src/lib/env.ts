@@ -34,6 +34,9 @@ const envSchema = z.object({
   STRIPE_WEBHOOK_SECRET: z.string().optional(),
   STRIPE_PUBLIC_KEY: z.string().optional(),
 
+  // OpenRouter
+  OPENROUTER_API_KEY: z.string().optional(),
+
   // Cloudflare R2
   R2_ENDPOINT_URL: z.string().optional(),
   R2_ACCESS_KEY_ID: z.string().optional(),
@@ -52,6 +55,9 @@ const envSchema = z.object({
     .string()
     .transform((val) => (val === "" ? undefined : val))
     .pipe(z.url().optional()),
+
+  // Fiscal Nacional
+  FISCAL_WEBHOOK_SECRET: z.string().optional(),
 });
 
 export type Env = z.infer<typeof envSchema>;

@@ -5,28 +5,30 @@
     "": {
       "name": "backend_bun_hono",
       "dependencies": {
-        "@aws-sdk/client-s3": "^3.943.0",
-        "@aws-sdk/s3-request-presigner": "^3.943.0",
-        "@hono/swagger-ui": "^0.5.2",
-        "@hono/zod-openapi": "^1.1.5",
-        "@hono/zod-validator": "^0.7.5",
-        "@sentry/bun": "^10.28.0",
-        "better-auth": "^1.4.5",
+        "@aws-sdk/client-s3": "^3.972.0",
+        "@aws-sdk/s3-request-presigner": "^3.972.0",
+        "@hono/swagger-ui": "^0.5.3",
+        "@hono/zod-openapi": "^1.2.0",
+        "@hono/zod-validator": "^0.7.6",
+        "@sentry/bun": "^10.36.0",
+        "@tanstack/ai": "^0.6.1",
+        "@tanstack/ai-openrouter": "^0.6.1",
+        "better-auth": "^1.4.17",
         "drizzle-orm": "^0.44.7",
-        "hono": "^4.10.7",
+        "hono": "^4.11.4",
         "hono-rate-limiter": "^0.4.2",
         "jose": "^6.1.3",
-        "postgres": "^3.4.7",
-        "resend": "^6.5.2",
-        "stripe": "^20.0.0",
-        "zod": "^4.1.13",
+        "postgres": "^3.4.8",
+        "resend": "^6.8.0",
+        "stripe": "^20.2.0",
+        "zod": "^4.3.5",
       },
       "devDependencies": {
-        "@biomejs/biome": "^2.3.8",
+        "@biomejs/biome": "^2.3.11",
         "@types/bun": "latest",
-        "@vitest/coverage-v8": "^4.0.15",
-        "drizzle-kit": "^0.31.7",
-        "vitest": "^4.0.15",
+        "@vitest/coverage-v8": "^4.0.17",
+        "drizzle-kit": "^0.31.8",
+        "vitest": "^4.0.17",
       },
       "peerDependencies": {
         "typescript": "^5.9.3",
@@ -235,6 +237,8 @@
     "@noble/ciphers": ["@noble/ciphers@2.0.1", "", {}, "sha512-xHK3XHPUW8DTAobU+G0XT+/w+JLM7/8k1UFdB5xg/zTFPnFCobhftzw8wl4Lw2aq/Rvir5pxfZV5fEazmeCJ2g=="],
 
     "@noble/hashes": ["@noble/hashes@2.0.1", "", {}, "sha512-XlOlEbQcE9fmuXxrVTXCTlG2nlRXa9Rj3rr5Ue/+tX+nmkgbX720YHh0VR3hBF9xDvwnb8D2shVGOwNx+ulArw=="],
+
+    "@openrouter/sdk": ["@openrouter/sdk@0.3.15", "", { "dependencies": { "zod": "^3.25.0 || ^4.0.0" } }, "sha512-tmiMQGu6L1fHD9NpIABN9LALEZitqM27CFebSVyJTQDcxCcR3m1F6v1O1MnOlLmedCFU+/BojniRGFAXo1F3Bw=="],
 
     "@opentelemetry/api": ["@opentelemetry/api@1.9.0", "", {}, "sha512-3giAOQvZiH5F9bMlMiv8+GSPMeqg0dbaeo58/0SlA9sxSqZhnUtxzX9/2FzyhS9sWQf5S0GJE0AKBrFqjpeYcg=="],
 
@@ -462,6 +466,12 @@
 
     "@standard-schema/spec": ["@standard-schema/spec@1.0.0", "", {}, "sha512-m2bOd0f2RT9k8QJx1JN85cZYyH1RqFBdlwtkSlf4tBDYLCiiZnv1fIIwacK6cqwXavOydf0NPToMQgpKq+dVlA=="],
 
+    "@tanstack/ai": ["@tanstack/ai@0.6.1", "", { "dependencies": { "@tanstack/devtools-event-client": "^0.4.0", "partial-json": "^0.1.7" } }, "sha512-k+4JrjBm5O1j5ccxErlUVC2IC2rJIqQCK45loLckeLow0cJ5rWdKtG03UwR+9VjppDdL6oO27jyk5CzU6ym+HQ=="],
+
+    "@tanstack/ai-openrouter": ["@tanstack/ai-openrouter@0.6.1", "", { "dependencies": { "@openrouter/sdk": "0.3.15", "@tanstack/ai": "0.6.1" } }, "sha512-ZkTtg3eKdndg3GTufzRNr7DPShAlyEW0rfWtBn1gYAQeayT+EQq5wuQ4zBe5sjOw/2LcbWTejjV4S97/0JLARQ=="],
+
+    "@tanstack/devtools-event-client": ["@tanstack/devtools-event-client@0.4.0", "", {}, "sha512-RPfGuk2bDZgcu9bAJodvO2lnZeHuz4/71HjZ0bGb/SPg8+lyTA+RLSKQvo7fSmPSi8/vcH3aKQ8EM9ywf1olaw=="],
+
     "@types/bun": ["@types/bun@1.3.6", "", { "dependencies": { "bun-types": "1.3.6" } }, "sha512-uWCv6FO/8LcpREhenN1d1b6fcspAB+cefwD7uti8C8VffIv0Um08TKMn98FynpTiU38+y2dUO55T11NgDt8VAA=="],
 
     "@types/chai": ["@types/chai@5.2.3", "", { "dependencies": { "@types/deep-eql": "*", "assertion-error": "^2.0.1" } }, "sha512-Mw558oeA9fFbv65/y4mHtXDs9bPnFMZAL/jxdPFUpOHHIXX91mcgEHbS5Lahr+pwZFR8A7GQleRWeI6cGFC2UA=="],
@@ -623,6 +633,8 @@
     "obug": ["obug@2.1.1", "", {}, "sha512-uTqF9MuPraAQ+IsnPf366RG4cP9RtUi7MLO1N3KEc+wb0a6yKpeL0lmk2IB1jY5KHPAlTc6T/JRdC/YqxHNwkQ=="],
 
     "openapi3-ts": ["openapi3-ts@4.5.0", "", { "dependencies": { "yaml": "^2.8.0" } }, "sha512-jaL+HgTq2Gj5jRcfdutgRGLosCy/hT8sQf6VOy+P+g36cZOjI1iukdPnijC+4CmeRzg/jEllJUboEic2FhxhtQ=="],
+
+    "partial-json": ["partial-json@0.1.7", "", {}, "sha512-Njv/59hHaokb/hRUjce3Hdv12wd60MtM9Z5Olmn+nehe0QDAsRtRbJPvJ0Z91TusF0SuZRIvnM+S4l6EIP8leA=="],
 
     "pathe": ["pathe@2.0.3", "", {}, "sha512-WUjGcAqP1gQacoQe+OBJsFA7Ld4DyXuUIjZ5cc75cLHvJ7dtNsTugphxIADwspS+AraAUePCKrSVtPLFj/F88w=="],
 
