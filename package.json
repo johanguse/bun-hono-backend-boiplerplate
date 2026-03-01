@@ -39,6 +39,7 @@
     "@hono/zod-openapi": "^1.2.0",
     "@hono/zod-validator": "^0.7.6",
     "@sentry/bun": "^10.36.0",
+    "@tanstack/ai": "^0.6.1",
     "better-auth": "^1.4.17",
     "drizzle-orm": "^0.44.7",
     "hono": "^4.11.4",

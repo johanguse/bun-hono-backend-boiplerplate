@@ -20,6 +20,7 @@ import subscriptionsRouter from "./routes/subscriptions";
 import uploadsRouter from "./routes/uploads";
 import usersRouter from "./routes/users";
 import webhooksRouter from "./routes/webhooks";
+import chatRouter from "./routes/chat";
 
 // Create app
 const app = new Hono();
@@ -82,6 +83,7 @@ apiV1.route("/projects", projectsRouter);
 apiV1.route("/subscriptions", subscriptionsRouter);
 apiV1.route("/uploads", uploadsRouter);
 apiV1.route("/fiscal", fiscalRouter);
+apiV1.route("/chat", chatRouter);
 
 // Mount API v1
 app.route("/api/v1", apiV1);
