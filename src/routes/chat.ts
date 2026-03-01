@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import { env } from "../lib/env";
-import { createOpenRouter } from "@tanstack/ai";
-import { streamText } from "@tanstack/ai";
+import { chat, toServerSentEventsResponse } from "@tanstack/ai";
+import { openRouterText } from "@tanstack/ai-openrouter";
 
 const router = new Hono();
 
@@ -16,22 +16,14 @@ router.post("/stream", async (c) => {
   const body = await c.req.json();
   const messages = body.messages || [];
 
-  // Initialize the native OpenRouter adapter
-  const openrouter = createOpenRouter({
-    apiKey: apiKey,
-  });
-
   try {
-    // Generate the streaming response using TanStack AI's streamText
-    const result = await streamText({
-      model: openrouter("anthropic/claude-3.5-sonnet"), // Default model, can be made dynamic
+    // Generate the streaming response using TanStack AI's chat
+    const stream = chat({
+      adapter: openRouterText("anthropic/claude-3.5-sonnet"),
       messages: messages,
-      // You can add TanStack server functions here in the tools array if desired:
-      // tools: { ... },
     });
 
-    // streamText returns a Response object heavily optimized for standard Web Streams
-    return result.toDataStreamResponse();
+    return toServerSentEventsResponse(stream);
   } catch (error) {
     console.error("AI Stream Error:", error);
     return c.json({ error: "Failed to stream from AI provider" }, 500);
