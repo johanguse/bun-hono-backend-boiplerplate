@@ -13,6 +13,7 @@ import authRouter from "./routes/auth";
 import onboardingRouter from "./routes/auth/onboarding";
 import otpRouter from "./routes/auth/otp";
 import fiscalRouter from "./routes/fiscal";
+import chatRouter from "./routes/chat";
 import healthRouter from "./routes/health";
 import organizationsRouter from "./routes/organizations";
 import projectsRouter from "./routes/projects";
@@ -20,7 +21,6 @@ import subscriptionsRouter from "./routes/subscriptions";
 import uploadsRouter from "./routes/uploads";
 import usersRouter from "./routes/users";
 import webhooksRouter from "./routes/webhooks";
-import chatRouter from "./routes/chat";
 
 // Create app
 const app = new Hono();

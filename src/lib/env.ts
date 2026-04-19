@@ -50,6 +50,14 @@ const envSchema = z.object({
   GITHUB_CLIENT_ID: z.string().optional(),
   GITHUB_CLIENT_SECRET: z.string().optional(),
 
+  // AI / OpenRouter
+  OPENROUTER_API_KEY: z
+    .string()
+    .transform((val) => (val === "" ? undefined : val))
+    .pipe(z.string().optional()),
+  AI_MAX_TOKENS: z.coerce.number().default(2048),
+  AI_MODEL: z.string().default("anthropic/claude-3.5-sonnet"),
+
   // Sentry
   SENTRY_DSN: z
     .string()
