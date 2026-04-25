@@ -51,6 +51,10 @@ const adminUpdateUserSchema = z.object({
   maxTeams: z.number().optional(),
 });
 
+const pushTokenSchema = z.object({
+  token: z.string().min(1).max(4096),
+});
+
 /**
  * Get current user
  * GET /users/me
@@ -87,6 +91,27 @@ usersRouter.get("/me", requireAuth, async (c) => {
     created_at: user!.createdAt?.toISOString(),
     updated_at: user!.updatedAt?.toISOString(),
   });
+});
+
+/**
+ * Register FCM / push device token
+ * POST /users/me/push-token
+ */
+usersRouter.post("/me/push-token", requireAuth, zValidator("json", pushTokenSchema), async (c) => {
+  const user = c.get("user");
+  const { token } = c.req.valid("json");
+
+  try {
+    await db
+      .update(users)
+      .set({ pushToken: token, updatedAt: new Date() })
+      .where(eq(users.id, user!.id));
+
+    return c.body(null, 204);
+  } catch (error) {
+    console.error("Update push token error:", error);
+    return c.json({ detail: "Failed to save push token" }, 500);
+  }
 });
 
 /**

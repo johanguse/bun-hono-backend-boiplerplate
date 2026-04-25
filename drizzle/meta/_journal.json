@@ -15,6 +15,13 @@
       "when": 1770472560957,
       "tag": "0001_brainy_network",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1777133653941,
+      "tag": "0002_groovy_masque",
+      "breakpoints": true
     }
   ]
 }

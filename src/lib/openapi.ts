@@ -324,6 +324,38 @@ export const openApiSpec = {
         },
       },
     },
+    "/users/me/push-token": {
+      post: {
+        operationId: "usersUpdatePushToken",
+        tags: ["Users"],
+        summary: "Register push notification token",
+        description:
+          "Store the FCM (or other) device token for the current user. Used for mobile push delivery.",
+        security: [{ bearerAuth: [] }],
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                required: ["token"],
+                properties: {
+                  token: { type: "string", minLength: 1, maxLength: 4096 },
+                },
+              },
+            },
+          },
+        },
+        responses: {
+          "204": {
+            description: "Token saved",
+          },
+          "401": {
+            description: "Unauthorized",
+          },
+        },
+      },
+    },
     "/organizations": {
       get: {
         operationId: "organizationsList",
