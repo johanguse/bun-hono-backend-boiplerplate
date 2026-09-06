@@ -32,6 +32,8 @@ export async function createJWT(payload: {
   })
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt(now)
+    .setAudience("fastapi-users:auth")
+    .setIssuer("better-auth-compat")
     .setExpirationTime(now + env.JWT_LIFETIME_SECONDS)
     .sign(secret);
 }
@@ -43,6 +45,7 @@ export async function verifyJWT(token: string): Promise<JWTPayload | null> {
   try {
     const { payload } = await jwtVerify(token, secret, {
       algorithms: ["HS256"],
+      audience: "fastapi-users:auth", // Must match the audience set by the FastAPI compat layer
     });
     return payload as unknown as JWTPayload;
   } catch {

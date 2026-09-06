@@ -33,6 +33,9 @@ const envSchema = z.object({
   STRIPE_SECRET_KEY: z.string().optional(),
   STRIPE_WEBHOOK_SECRET: z.string().optional(),
   STRIPE_PUBLIC_KEY: z.string().optional(),
+  // Pin to the API version the installed `stripe` SDK's types expect. Bump this
+  // (and the SDK) deliberately rather than letting them drift out of sync.
+  STRIPE_API_VERSION: z.string().default("2026-02-25.clover"),
 
   // Cloudflare R2
   R2_ENDPOINT_URL: z.string().optional(),
@@ -47,11 +50,24 @@ const envSchema = z.object({
   GITHUB_CLIENT_ID: z.string().optional(),
   GITHUB_CLIENT_SECRET: z.string().optional(),
 
+  // AI / OpenRouter
+  OPENROUTER_API_KEY: z
+    .string()
+    .transform((val) => (val === "" ? undefined : val))
+    .pipe(z.string().optional()),
+  AI_MAX_TOKENS: z.coerce.number().default(2048),
+  AI_MODEL: z.string().default("anthropic/claude-3.5-sonnet"),
+
   // Sentry
   SENTRY_DSN: z
     .string()
     .transform((val) => (val === "" ? undefined : val))
     .pipe(z.url().optional()),
+
+  // Fiscal Nacional (Brazilian tax info + NFS-e) - disabled unless explicitly enabled.
+  // Billing/subscriptions via Stripe work fully without this feature.
+  FISCAL_ENABLED: z.coerce.boolean().default(false),
+  FISCAL_WEBHOOK_SECRET: z.string().optional(),
 });
 
 export type Env = z.infer<typeof envSchema>;

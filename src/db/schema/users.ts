@@ -39,6 +39,9 @@ export const users = pgTable("users", {
   onboardingCompleted: boolean("onboarding_completed").default(false).notNull(),
   onboardingStep: integer("onboarding_step").default(0).notNull(),
 
+  /** FCM / APNs device token for push notifications */
+  pushToken: text("push_token"),
+
   // Timestamps
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).$onUpdate(() => new Date()),
