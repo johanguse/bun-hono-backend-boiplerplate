@@ -55,6 +55,7 @@ Optional (for full functionality):
 - `RESEND_API_KEY` - For email sending
 - `RESEND_FROM_EMAIL` - From email (supports "Name <email>" format)
 - `STRIPE_SECRET_KEY` / `STRIPE_WEBHOOK_SECRET` / `STRIPE_PUBLIC_KEY` - For payments/billing
+- `STRIPE_API_VERSION` - Stripe API version (must match what the installed `stripe` package's types expect; defaults to `2026-02-25.clover`)
 - `R2_*` - For Cloudflare R2 file storage
 - `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` / `GITHUB_CLIENT_ID` / `GITHUB_CLIENT_SECRET` - For OAuth login
 - `OPENROUTER_API_KEY` / `AI_MODEL` / `AI_MAX_TOKENS` - For the AI chat endpoint

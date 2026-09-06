@@ -8,6 +8,7 @@
  */
 
 import Stripe from "stripe";
+import { env } from "../lib/env";
 
 // Currency mappings
 const CURRENCIES = [
@@ -61,7 +62,7 @@ export class CurrencyConversionService {
 
   constructor(stripeApiKey: string) {
     this.stripe = new Stripe(stripeApiKey, {
-      apiVersion: "2025-12-15.clover",
+      apiVersion: env.STRIPE_API_VERSION as Stripe.LatestApiVersion,
     });
   }
 
