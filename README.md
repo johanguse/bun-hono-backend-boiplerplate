@@ -12,6 +12,8 @@ A modern API backend built with **Bun** runtime and **Hono** framework. Features
 - **Authentication**: [Better Auth](https://better-auth.com) + JWT + OTP
 - **Validation**: [Zod](https://zod.dev) v4
 - **Payments**: Stripe
+- **AI Chat**: OpenRouter via [TanStack AI](https://tanstack.com) (optional)
+- **Fiscal**: Brazilian tax info / NFS-e via Fiscal Nacional (optional, disabled by default)
 - **Email**: Resend
 - **Storage**: Cloudflare R2
 - **Linting**: [Biome](https://biomejs.dev)
@@ -52,10 +54,22 @@ Optional (for full functionality):
 
 - `RESEND_API_KEY` - For email sending
 - `RESEND_FROM_EMAIL` - From email (supports "Name <email>" format)
-- `STRIPE_SECRET_KEY` - For payments
-- `STRIPE_WEBHOOK_SECRET` - For Stripe webhooks
+- `STRIPE_SECRET_KEY` / `STRIPE_WEBHOOK_SECRET` / `STRIPE_PUBLIC_KEY` - For payments/billing
 - `R2_*` - For Cloudflare R2 file storage
+- `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` / `GITHUB_CLIENT_ID` / `GITHUB_CLIENT_SECRET` - For OAuth login
+- `OPENROUTER_API_KEY` / `AI_MODEL` / `AI_MAX_TOKENS` - For the AI chat endpoint
+- `FISCAL_ENABLED` / `FISCAL_WEBHOOK_SECRET` - For Brazilian fiscal/NFS-e features (see below)
 - `SENTRY_DSN` - For error monitoring
+
+None of these are required to run core auth, organizations, projects, or **billing/Stripe subscriptions** — those work fully with just the required variables above.
+
+### Optional Feature: Fiscal (Brazilian Tax / NFS-e)
+
+The backend includes an opt-in module for Brazilian tax information and NFS-e (electronic service invoice) management, separate from and independent of the Stripe billing flow.
+
+- Disabled by default. Set `FISCAL_ENABLED=true` to mount the `/api/v1/fiscal/*` routes.
+- When disabled (or left unset), those routes simply don't exist (404) and the rest of the API — including Stripe checkout, subscriptions, and billing history — works normally.
+- `FISCAL_WEBHOOK_SECRET` is only needed if you enable the feature and want to receive Fiscal Nacional webhook callbacks (`POST /fiscal/webhook`); without it, that endpoint rejects all requests.
 
 ### Database Setup
 
@@ -153,6 +167,7 @@ All routes are prefixed with `/api/v1`:
 
 - `GET /users/me` - Get current user profile
 - `PATCH /users/me` - Update profile
+- `POST /users/me/push-token` - Register FCM/push device token
 - `POST /users/profile/image` - Upload avatar
 - `DELETE /users/profile/image` - Delete avatar
 - `GET /users/admin/users` - List users (admin)
@@ -199,6 +214,23 @@ All routes are prefixed with `/api/v1`:
 - `POST /uploads/avatar` - Upload user avatar
 - `DELETE /uploads/avatar` - Delete user avatar
 
+### Chat (AI)
+
+- `POST /chat/stream` - Streaming chat completion via OpenRouter (requires `OPENROUTER_API_KEY`)
+
+### Fiscal (optional — requires `FISCAL_ENABLED=true`)
+
+Brazilian tax info and NFS-e management, independent of Stripe billing.
+
+- `GET /fiscal/tax-info` - Get current user's tax info
+- `POST /fiscal/tax-info` - Create/update tax info
+- `GET /fiscal/brazilian-states` - List Brazilian states
+- `GET /fiscal/brazilian-cities/:stateCode` - List cities for a state (IBGE API)
+- `GET /fiscal/validate-cpf-cnpj/:document` - Validate a CPF/CNPJ document
+- `GET /fiscal/nfse` - List current user's NFS-e records
+- `GET /fiscal/nfse/:id` - Get a specific NFS-e record
+- `POST /fiscal/webhook` - Fiscal Nacional webhook handler (HMAC-signed, requires `FISCAL_WEBHOOK_SECRET`)
+
 ### Health
 
 - `GET /health` - Full health check
@@ -222,6 +254,8 @@ All routes are prefixed with `/api/v1`:
 - `email_tokens` - Email verification/OTP tokens
 - `team_invitations` - Pending invitations
 - `activity_logs` - Audit logging
+- `user_tax_info` - Brazilian/international tax info (fiscal feature)
+- `nfse` - NFS-e records (fiscal feature)
 
 ## Scripts
 
@@ -379,6 +413,8 @@ src/
 │   └── sentry.ts         # Sentry middleware
 ├── routes/
 │   ├── auth/             # Authentication routes
+│   ├── chat.ts           # AI chat streaming (OpenRouter)
+│   ├── fiscal/           # Brazilian tax/NFS-e routes (optional, FISCAL_ENABLED)
 │   ├── health/           # Health check routes
 │   ├── organizations/    # Organization routes
 │   ├── projects/         # Project routes

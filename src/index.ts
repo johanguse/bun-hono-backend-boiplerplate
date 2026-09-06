@@ -82,8 +82,13 @@ apiV1.route("/organizations", organizationsRouter);
 apiV1.route("/projects", projectsRouter);
 apiV1.route("/subscriptions", subscriptionsRouter);
 apiV1.route("/uploads", uploadsRouter);
-apiV1.route("/fiscal", fiscalRouter);
 apiV1.route("/chat", chatRouter);
+
+// Fiscal (Brazilian tax info / NFS-e) is an opt-in feature.
+// Stripe billing/subscriptions work fully whether or not this is enabled.
+if (env.FISCAL_ENABLED) {
+  apiV1.route("/fiscal", fiscalRouter);
+}
 
 // Mount API v1
 app.route("/api/v1", apiV1);
